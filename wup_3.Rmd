@@ -22,9 +22,18 @@ The data came from UCDavis in the year...
 
 $H_0$: There is no difference between the average number of drinks imbibed between people conditioned on the row they sit in.
 
-$H_A$: The average number drinks is different between at least two rows.   
+$H_A$: The average number drinks is different between at least two rows. 
 
-## Now with ggplot - first select the basic data
+# Methods 
+In the data set davisdata Seat is a categorical variable, alcohol is numerical
+
+we try to predict alcohol ~ seat so we use the.... helper file 
+
+# Results 
+
+## Descriptive Results 
+
+### Graphical Summary
 
 ```{r}
 basicCN <- ggplot(davisdata,aes(y=alcohol,x=Seat))
@@ -34,18 +43,41 @@ basicCN <- ggplot(davisdata,aes(y=alcohol,x=Seat))
 ```{r}
 basicCN + geom_boxplot()
 ```
-  
-  
-### get fancy  
+
+
+This box plot shows that there is a larger group that sit in the back who consume the alcohol rather than those in the front or middle seats.  
+
+### Numerical Summary
 
 ```{r}
-basicCN + geom_boxplot(notch=TRUE,outlier.color = "red") + stat_boxplot(geom ='errorbar') + labs(title="Fancy notch boxplot \n with 2 lines")
+favstats(alcohol~Seat,data=ucdavis1)
 ```
 
-## Numerical Summarys 
 
-## Inferential Tests
+The numerical summary shows that the difference between the back seats and the seats in the middle and the front are more likely to consume alcohol. 
+
+### Inferntial Results 
+```{r}
+model1 <- aov(alcohol~Seat,data=davisdata)
+summary.aov(model1)
+```
+
+
+The P-value is 0.000116, less than 0.05 so we reject the null Hypothesis.
+There is a difference in alcholo consumption based on where they sit. 
+
+## When significant follow up with TukeyHSD  
+
+```{r}
+plot(TukeyHSD(model1))
+```
+
 
 ## Conclusions
+
+The interval in the middle-front contains a zero, showing that there is no statistical difference in the alcohol consumption by the people who occupy the seats middle-front.
+
+The intervals in the front-back and middle-back show that there is a statistical difference between both because they do not contain a zero. 
+
 
 
